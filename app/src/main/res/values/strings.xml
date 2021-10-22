@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">list-app</string>
+    <string name="title_home">Home</string>
+    <string name="title_stock">Stock</string>
+    <string name="title_agregar_producto">Agregar</string>
+    <string name="title_mi_perfil">Mi Perfil</string>
+    <string name="url_API">https://listapp2021.herokuapp.com</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
