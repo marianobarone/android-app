@@ -9,30 +9,34 @@
         android:id="@+id/navigation_home"
         android:name="com.example.list_app.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_navigation_home_to_listaProductos"
             app:destination="@id/listaProductos" />
+        <action
+            android:id="@+id/action_navigation_home_to_recipeDetailsFragment"
+            app:destination="@id/recipeDetailsFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.list_app.fragments.ProductosFragment"
-        android:label="@string/title_stock"
-        tools:layout="@layout/fragment_lista_stock" >
-        <argument
-            android:name="categoriaProductos"
-            app:argType="string" />
-    </fragment>
+        android:id="@+id/navigation_shop_list"
+        android:name="com.example.list_app.ui.shopList.ShopListFragment"
+        android:label="@string/title_lista_compras"
+        tools:layout="@layout/fragment_shop_list" />
 
     <fragment
-        android:id="@+id/navigation_mi_perfil"
-        android:name="com.example.list_app.ui.notifications.MiPerfilFragment"
-        android:label="@string/title_mi_perfil"
-        tools:layout="@layout/fragment_mi_perfil" />
+        android:id="@+id/navigation_recetas"
+        android:name="com.example.list_app.ui.recipes.RecipesFragment"
+        android:label="@string/title_recetas"
+        tools:layout="@layout/fragment_recipes" />
     <fragment
         android:id="@+id/listaProductos"
         android:name="com.example.list_app.fragments.ProductosFragment"
         android:label="Productos - Stock"
         tools:layout="@layout/fragment_lista_stock" />
+    <fragment
+        android:id="@+id/recipeDetailsFragment"
+        android:name="com.example.list_app.fragments.RecipeDetailsFragment"
+        android:label="Detalles Receta"
+        tools:layout="@layout/fragment_recipe_details" />
 </navigation>

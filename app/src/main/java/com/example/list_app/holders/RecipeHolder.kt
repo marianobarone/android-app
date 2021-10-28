@@ -9,6 +9,8 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.list_app.R
+import org.json.JSONArray
+import java.lang.reflect.Array
 
 class RecipeHolder(v: View) : RecyclerView.ViewHolder(v) {
     private var view: View
@@ -20,10 +22,9 @@ class RecipeHolder(v: View) : RecyclerView.ViewHolder(v) {
         this.cardRecipe = view.findViewById(R.id.recipeImg)
     }
 
-    fun setRecipeAtributes(name: String, img: String) {
+    fun setRecipeAttributes(name: String, category: String, img: String, instructions: String, ingredients: JSONArray) {
         val recipeName: TextView = view.findViewById(R.id.recipeName)
         val recipeImg: ImageView = view.findViewById(R.id.recipeImg)
-//        val viewImg: ImageView = view.findViewById(R.id.imgProducto)
 
         recipeName.text = name
         Glide.with(this.view).load(img).into(recipeImg)

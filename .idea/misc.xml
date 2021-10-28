@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/05 - TALLER DE PROGRAMACION 3/Fix proyecto-final/proyectofinal-mobile/app/src/main/res/layout/activity_main.xml" value="0.27870370370370373" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/05 - TALLER DE PROGRAMACION 3/Fix proyecto-final/proyectofinal-mobile/app/src/main/res/layout/fragment_home.xml" value="0.34444444444444444" />
         <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/05 - TALLER DE PROGRAMACION 3/TPs - Kotlin/proyecto list-app/app/src/main/res/drawable/ic_baseline_add_circle_outline_24.xml" value="0.253125" />
         <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/05 - TALLER DE PROGRAMACION 3/TPs - Kotlin/proyecto list-app/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.253125" />
         <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/05 - TALLER DE PROGRAMACION 3/TPs - Kotlin/proyecto list-app/app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.253125" />
@@ -30,6 +32,21 @@
         <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/05 - TALLER DE PROGRAMACION 3/TPs - Kotlin/prueba/app/src/main/res/layout/fragment_notifications.xml" value="0.36666666666666664" />
         <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/05 - TALLER DE PROGRAMACION 3/TPs - Kotlin/prueba/app/src/main/res/layout/producto_item.xml" value="0.33" />
         <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/05 - TALLER DE PROGRAMACION 3/TPs - Kotlin/prueba/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/layout/categoria_item.xml" value="0.36666666666666664" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/layout/fragment_dashboard.xml" value="0.36666666666666664" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/layout/fragment_home.xml" value="0.36666666666666664" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/layout/fragment_lista_stock.xml" value="0.36666666666666664" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/layout/fragment_mi_perfil.xml" value="0.36666666666666664" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/layout/fragment_recipe_details.xml" value="0.36666666666666664" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/layout/fragment_recipes.xml" value="0.36666666666666664" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/layout/fragment_shop_list.xml" value="0.21212121212121213" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/layout/groups_list.xml" value="0.36666666666666664" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/layout/ingredient_item.xml" value="0.5" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/layout/producto_item.xml" value="0.33" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/layout/recipe_item.xml" value="0.36666666666666664" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/layout/shop_list_item.xml" value="0.36666666666666664" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36666666666666664" />
       </map>
     </option>
   </component>

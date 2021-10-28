@@ -1,9 +1,11 @@
 package com.example.list_app.ui.home
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.list_app.R
@@ -14,7 +16,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
 import com.example.list_app.MySingleton
 import com.example.list_app.databinding.FragmentHomeBinding
 import com.android.volley.AuthFailureError
@@ -25,44 +26,55 @@ import com.example.list_app.entities.Recipe
 import com.example.list_app.entities.Usuario
 import org.json.JSONObject
 import androidx.recyclerview.widget.LinearLayoutManager
+import android.content.DialogInterface
+
+import android.widget.EditText
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 
 
-
-
-
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
     private var _binding: FragmentHomeBinding? = null
 
-    val API_URL = "https://listapp2021.herokuapp.com"
+    val API_URL         = "https://listapp2021.herokuapp.com"
+    val API_URL_RECIPES = "https://listapp2021.herokuapp.com/recipes"
 
     lateinit var v: View
 
-    lateinit var recyclerCategorias: RecyclerView
-    lateinit var recyclerRecipes: RecyclerView
+    lateinit var recyclerCategories: RecyclerView
+    lateinit var recyclerHomeRecipes: RecyclerView
+    lateinit var groupDropdown: AutoCompleteTextView
 
-    var categorias: MutableList<Categoria> = ArrayList<Categoria>()
+    lateinit var dropdownOptions: ArrayAdapter<String>
+
+    var categories: MutableList<Categoria> = ArrayList<Categoria>()
     var recipes: MutableList<Recipe> = ArrayList<Recipe>()
 
-    private lateinit var categoriaListAdapter: CategoriaAdapter
-    private lateinit var recipeListAdapter: RecipeAdapter
+    private lateinit var categoriesListAdapter: CategoriaAdapter
+    private lateinit var recipesListAdapter: RecipeAdapter
+
+    lateinit var createGroupBtn: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        categorias = ArrayList<Categoria>()
+        categories = ArrayList<Categoria>()
         recipes = ArrayList<Recipe>()
 
         v = inflater.inflate(R.layout.fragment_home, container, false)
-        recyclerCategorias = v.findViewById(R.id.categorias_recycler_viewer)
-        recyclerRecipes = v.findViewById(R.id.recipes_recycler_viewer)
+        recyclerCategories = v.findViewById(R.id.categorias_recycler_viewer)
+        recyclerHomeRecipes = v.findViewById(R.id.home_recipes_recycler_viewer)
 
-        categoriaListAdapter = CategoriaAdapter(categorias, this.v);
-        recipeListAdapter = RecipeAdapter(recipes, this.v);
+        groupDropdown = v.findViewById(R.id.groupsDropdown)
 
-        recyclerCategorias.adapter = categoriaListAdapter
-        recyclerRecipes.adapter = recipeListAdapter
+        categoriesListAdapter = CategoriaAdapter(categories, this.v);
+        recipesListAdapter = RecipeAdapter(recipes, this.v);
+
+        recyclerCategories.adapter = categoriesListAdapter
+        recyclerHomeRecipes.adapter = recipesListAdapter
 
         return v
     }
@@ -71,70 +83,90 @@ class HomeFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
     }
 
-    fun callRecipes(){
-        val reqRecipe: JsonArrayRequest = object : JsonArrayRequest(Request.Method.GET,"https://listapp2021.herokuapp.com/recipes", null,
-            Response.Listener {response ->
-                val res = "Response: %s".format(response.toString())
+    override fun onStart() {
+        super.onStart()
+        getRecipesData()
+        getUserData()
+//        getGroups()
 
-                System.out.println(res)
+        createGroupBtn = v.findViewById(R.id.createGroup)
 
-                val user = Recipe()
-                val recetas = response
+//        val input = TextInputEditText(v.context)
+        //com.google.android.material.textfield.TextInputLayout
 
-                for (i in 0 until response.length()) {
-//                    categorias.add(Recipe(get(i).toString()))
-                val unaReceta = response.get(i) as JSONObject
+        createGroupBtn.setOnClickListener(){
+            val input = TextInputEditText(v.context)
 
-                    System.out.println(unaReceta.getString("nombre"))
-                    recipes.add(Recipe(unaReceta.getString("nombre"),unaReceta.getString("foto")))
+            MaterialAlertDialogBuilder(v.context)
+                .setView(input)
+                .setTitle("Crear Nuevo Grupo")
+                .setMessage("Ingrese el nombre del nuevo grupo:") //
+                .setNegativeButton("Cancelar") { dialog, which ->
+                    // Respond to negative button press
                 }
+                .setPositiveButton("Crear") { dialog, which ->
+                    //HACER LLAMADA A API PARA CAMBIAR DE GRUPO
+                    val groupName = input.text.toString()
+                    System.out.println(groupName)
+                    System.out.println(groupName)
+                    // Respond to positive button press
+                }
+                .show()
+        }
+    }
 
-//                System.out.println(user.toString())
+    fun getRecipesData() {
+        val recipeRequest: JsonArrayRequest = object :
+            JsonArrayRequest(Request.Method.GET, API_URL_RECIPES, null,
+                Response.Listener { response ->
+//                    val res = "Response: %s".format(response.toString())
+//
+//                    System.out.println(res)
 
-                recipeListAdapter = RecipeAdapter(recipes, this.v);
-                recyclerRecipes.adapter = recipeListAdapter
+                    val user = Recipe()
 
-            }, Response.ErrorListener { error ->
-                // handle error
-                System.out.println("Response: %s".format(error.toString()))
-            }) {
+                    for (i in 0 until response.length()) {
+                        val unaReceta = response.get(i) as JSONObject
+
+//                        System.out.println(unaReceta.getString("nombre"))
+                        recipes.add(
+                            Recipe(
+                                unaReceta.getString("nombre"),
+                                unaReceta.getString("categoria"),
+                                unaReceta.getJSONArray("subcategoriaIngredientes"),
+                                unaReceta.getString("foto"),
+                                unaReceta.getString("instrucciones"),
+                                unaReceta.getJSONArray("ingredientes"),
+                            )
+                        )
+                    }
+
+                    recipesListAdapter = RecipeAdapter(recipes, this.v);
+                    recyclerHomeRecipes.adapter = recipesListAdapter
+
+                }, Response.ErrorListener { error ->
+                    // handle error
+                    System.out.println("Response: %s".format(error.toString()))
+                }) {
             @Throws(AuthFailureError::class)
             override fun getHeaders(): Map<String, String> {
                 val headers = HashMap<String, String>()
-//                headers["Authorization"] = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjhmYmRmMjQxZTdjM2E2NTEzNTYwNmRkYzFmZWQyYzU1MjI2MzBhODciLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiTW96byBEaWdpdGFsIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FBVFhBSndNWWp6Z3Uxdlk5V2JMRmg0TEFLT0lkYUtxVnFKUWJDd0RpVElsPXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2xpc3RhcHBkYiIsImF1ZCI6Imxpc3RhcHBkYiIsImF1dGhfdGltZSI6MTYzNDc3NTI5MCwidXNlcl9pZCI6IjZpRG91YjZCaVJXeEdBaGZISWJ4TGNoZlVXUzIiLCJzdWIiOiI2aURvdWI2QmlSV3hHQWhmSElieExjaGZVV1MyIiwiaWF0IjoxNjM0Nzc1MjkwLCJleHAiOjE2MzQ3Nzg4OTAsImVtYWlsIjoibW96by5kaWdpdGFsLmFwcEBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwNjg4Mjc1Nzg5NDc0MDI1MDIxNiJdLCJlbWFpbCI6WyJtb3pvLmRpZ2l0YWwuYXBwQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.VmoUKnotsaJ7BRBHB4BGVWlPXhcNEhdQepee98enN0mK_AW-0hxfvZh44as54dXUjlt6igwnYAIVOw3imSWbdLyb_cqBkC5Qt4XUodn2k4HLjSRFSVVeBm-UVSaSxNp_cwAOx0fS4mKSZHuoj0f5CooA4SRyePT7pKaPYoP9G6FlVv5bIP6quKOUuy2s0yCsrl1Hncao-VRXaXah5gi3m8IWo8dmHAHYh7m1351QfPJWWs3H3ev1_fnbDMo8I0e6yB7oNPpEaXE-f4p_LLfyxcbNk33VpMU314flq4qiJEuQv3nbcM7zDHwGJRH-MXHrsd3-psBWXfY1kTtaG9GHrA"
+//                headers["Authorization"] = ""
 //                //headers["ANOTHER_CUSTOM_HEADER"] = "Google"
                 return headers
             }
         }
 
-        MySingleton.getInstance(v.context).addToRequestQueue(reqRecipe);
+        MySingleton.getInstance(v.context).addToRequestQueue(recipeRequest);
 
-
-
-        recyclerRecipes.setHasFixedSize(true)
-        recyclerRecipes.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-//        recyclerRecipes.layoutManager = GridLayoutManager() (context, GridLayoutManager.HORIZONTAL, 1)
-
-//        recyclerRecipes.layoutManager =          GridLayoutManager(context, 1, GridLayoutManager.HORIZONTAL, false)
-//        recyclerRecipes.setNestedScrollingEnabled(false);
-//        recyclerRecipes.setLayoutManager(LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false))
-
-
-//        recyclerRecipes.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false   )
-//        recyclerRecipes.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
+        recyclerHomeRecipes.setHasFixedSize(true)
+        recyclerHomeRecipes.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
-    override fun onStart() {
-        super.onStart()
-
-//        val queue = Volley.newRequestQueue(v.context)
-        val url = API_URL + "/users"
-
-        callRecipes()
-
-        val req: JsonObjectRequest = object : JsonObjectRequest(Request.Method.GET,url, null,
-            Response.Listener {response ->
+    fun getUserData() {
+        val userRequest: JsonObjectRequest = object : JsonObjectRequest(Request.Method.GET, API_URL + "/users", null,
+            Response.Listener { response ->
                 val res = "Response: %s".format(response.toString())
 
                 System.out.println(res)
@@ -142,12 +174,17 @@ class HomeFragment : Fragment() {
                 val user = Usuario()
                 val grupoSeleccionado = GrupoSeleccionado()
                 val grupoAPI = response.getJSONObject("selectedGroup")
+                val grupos = response.getJSONArray("idGroups");
+                val grupoName = grupoAPI.getString("name");
 
-                grupoSeleccionado.setNombreGrupo(grupoAPI.getString("nombre"))
-                grupoSeleccionado.setDuenio(grupoAPI.getString("duenio"))
-                grupoSeleccionado.setCategoriasStock(grupoAPI.getJSONArray("categoriasStock") )
-                grupoSeleccionado.setSubCategoriasStock(grupoAPI.getJSONArray("subcategoriaStock"))
-                grupoSeleccionado.setListaPendientes(grupoAPI.getJSONArray("listaPendientes"))
+                //Se llena el dropdown con las casas del usuario
+                getGroups(grupos,grupoName)
+
+                grupoSeleccionado.setNombreGrupo(grupoAPI.getString("name"))
+                grupoSeleccionado.setDuenio(grupoAPI.getString("ownerName"))
+                grupoSeleccionado.setCategoriasStock(grupoAPI.getJSONArray("categoriesStock"))
+                grupoSeleccionado.setSubCategoriasStock(grupoAPI.getJSONArray("subcategoriesStock"))
+                grupoSeleccionado.setListaPendientes(grupoAPI.getJSONArray("shopList"))
                 grupoSeleccionado.setStock(grupoAPI.getJSONArray("stock"))
 
                 user.setUID(response.getString("uid"))
@@ -155,14 +192,20 @@ class HomeFragment : Fragment() {
                 user.setUserName(response.getString("username"))
                 user.setGrupoSeleccionado(grupoSeleccionado)
 
+                categories.add(Categoria("Stock Completo"))
+
                 for (i in 0 until user.getGrupoSeleccionado().getCategoriasStock().length()) {
-                    categorias.add(Categoria(grupoAPI.getJSONArray("categoriasStock").get(i).toString()))
+                    categories.add(
+                        Categoria(
+                            grupoAPI.getJSONArray("categoriesStock").get(i).toString()
+                        )
+                    )
                 }
 
                 System.out.println(user.toString())
 
-                categoriaListAdapter = CategoriaAdapter(categorias, this.v);
-                recyclerCategorias.adapter = categoriaListAdapter
+                categoriesListAdapter = CategoriaAdapter(categories, this.v);
+                recyclerCategories.adapter = categoriesListAdapter
 
             }, Response.ErrorListener { error ->
                 // handle error
@@ -171,35 +214,38 @@ class HomeFragment : Fragment() {
             @Throws(AuthFailureError::class)
             override fun getHeaders(): Map<String, String> {
                 val headers = HashMap<String, String>()
-                headers["Authorization"] = ""
+                headers["Authorization"] = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE1MjU1NWEyMjM3MWYxMGY0ZTIyZjFhY2U3NjJmYzUwZmYzYmVlMGMiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiTGlzdCBBcHAiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUFUWEFKemg3Rm5VbDZHMWxOd0dDTUpkUHdNeXo4OF9DNlRvN21SSWhHeFA9czk2LWMiLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vbGlzdGFwcGRiIiwiYXVkIjoibGlzdGFwcGRiIiwiYXV0aF90aW1lIjoxNjM1MzgyMjcwLCJ1c2VyX2lkIjoiVjlqbm9oTVlETGZTbTRvZmQ3VHhlMXRack01MyIsInN1YiI6IlY5am5vaE1ZRExmU200b2ZkN1R4ZTF0WnJNNTMiLCJpYXQiOjE2MzUzODIyNzAsImV4cCI6MTYzNTM4NTg3MCwiZW1haWwiOiJiaWdsaWdhcy5saXN0QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7Imdvb2dsZS5jb20iOlsiMTEwMTgzMjIzODcxNTM0NDMxNjI2Il0sImVtYWlsIjpbImJpZ2xpZ2FzLmxpc3RAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.Ei38uNpwFaH9F3tQdvcFd2_x61zdEWoFDywHUDuA67nNAeGNCh8c4CLbzOX_rGLmnaK_GTluzBN7WPaanpq003vJ7J3n09Sx6H78bdOjKxx8Q1FGFmCMmLNUj9TAwXlHMdCvU0KwgISdL5JtaV6YTaQCC3ZF6RhH5AXuHvk7PNJ3-N5XhBrspiOktnB5jW7Zfpe5x0yxN3gqzslBu1HgAujEAJS3BZAzKYH2eXHxFdAgoBmAxRsUxWuZ32d9TQvcxhxG9zK3THF_5Oyc-PsBmsELClGCalQokANO87Ta3ws0i6C3crV8nkw9f3sHe8xjMuaUeZKcMCKiHKLMympbdw"
                 //headers["ANOTHER_CUSTOM_HEADER"] = "Google"
                 return headers
             }
         }
 
         // Add the request to the RequestQueue.
-        //queue.add(jsonObjectRequest)
-        // Add a request (in this example, called stringRequest) to your RequestQueue.
-        MySingleton.getInstance(v.context).addToRequestQueue(req);
+        MySingleton.getInstance(v.context).addToRequestQueue(userRequest);
 
-        /*
-        categorias.add(Categoria("Ver Todo"))
-        categorias.add(Categoria("Frutas y Verduras"))
-        categorias.add(Categoria("Higiene"))
-        categorias.add(Categoria("Limpieza"))
-        categorias.add(Categoria("Carnes"))
+        recyclerCategories.setHasFixedSize(true)
+        recyclerCategories.layoutManager = GridLayoutManager(context, 2)
+    }
 
-         */
+    fun getGroups(idGroups: org.json.JSONArray, selectedGroupName: kotlin.String){
 
-        //Configuración Obligatoria
-        recyclerCategorias.setHasFixedSize(true)
-        recyclerCategorias.layoutManager = GridLayoutManager(context, 2)
+        val groupOptions = ArrayList<String>()
 
-        /*
-        categoriaListAdapter = CategoriaAdapter(categorias, this.v);
-        recyclerCategorias.adapter = categoriaListAdapter
+        for (i in 0 until idGroups.length()) {
+            val group = idGroups.get(i) as JSONObject
 
-         */
+            groupOptions.add(group.getString("name"))
+        }
+
+        dropdownOptions = ArrayAdapter<String>(v.context, R.layout.groups_list,groupOptions)
+
+        with(groupDropdown){
+//            groupDropdown.setText("TIENE QUE IR EL NOMBRE DEL GRUPO SELECCIONADO DEL USUARIO")
+            groupDropdown.setText(selectedGroupName)
+            groupDropdown.setAdapter(dropdownOptions)
+
+            onItemClickListener = this@HomeFragment
+        }
 
     }
 
@@ -211,5 +257,13 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    //Override de Groups Dropdown onClick
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        //ACÁ SE TIENE QUE CAMBIAR EL GRUPO SELECCIONADO DEL USUARIO, Y TRAER LA DATA DEL NUEVO GRUPO SELECCIONADO
+        val item = parent?.getItemAtPosition(position).toString()
+
+        Toast.makeText(this.context, item, Toast.LENGTH_SHORT).show()
     }
 }

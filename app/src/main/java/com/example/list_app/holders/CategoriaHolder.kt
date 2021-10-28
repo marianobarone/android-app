@@ -24,17 +24,17 @@ class CategoriaHolder (v: View) : RecyclerView.ViewHolder(v) {
         nombreCategoria.text = nombre
 
         when(nombre){
-            "Ver Todo"          ->  imgCategoria.setImageResource(R.drawable.cat_todo);
+            "Stock Completo"    ->  imgCategoria.setImageResource(R.drawable.cat_todo);
             "Frutas y Verduras" ->  imgCategoria.setImageResource(R.drawable.cat_frutas_verduras);
             "Higiene"           ->  imgCategoria.setImageResource(R.drawable.cat_higiene);
             "Limpieza"          ->  imgCategoria.setImageResource(R.drawable.cat_limpieza);
-            "Carnes"             ->  imgCategoria.setImageResource(R.drawable.cat_carnes);
+            "Carnes"            ->  imgCategoria.setImageResource(R.drawable.cat_carnes);
+            "Bebidas"           ->  imgCategoria.setImageResource(R.drawable.cat_bebidas);
         }
 
     }
 
     fun getCardLayout(): CardView {
-
         return view.findViewById(R.id.card_categoria_package_item)
     }
 }

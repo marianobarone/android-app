@@ -3,16 +3,12 @@ package com.example.list_app.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.list_app.R
 import com.example.list_app.entities.Categoria
 import com.example.list_app.holders.CategoriaHolder
 import androidx.navigation.findNavController
 import com.example.list_app.ui.home.HomeFragmentDirections
-
-
-import android.os.Bundle
 import androidx.core.os.bundleOf
 
 
@@ -44,20 +40,10 @@ class CategoriaAdapter(
         holder.cardCategoria.setOnClickListener {
             System.out.println(categoriasList[i].nombre)
 
-//            val action = HomeFragmentDirections.actionNavigationHomeToListaProductos()
-//            view.findNavController().navigate(action)
-
             val action = HomeFragmentDirections.actionNavigationHomeToListaProductos()
-
-//
-//            val bundle = Bundle()
-//            bundle.putString("id", "prueba")
 
             val bundle = bundleOf( "categoria" to categoriasList[i].nombre)
             view.findNavController().navigate(R.id.action_navigation_home_to_listaProductos, bundle)
-
-
-            //Navigation.findNavController(view).navigate(R.id.action_navigation_home_to_listaProductos, bundle);
         }
 
     }

@@ -8,17 +8,17 @@ import java.lang.reflect.Array;
 public class Recipe {
     private String name;
     private String category;
-    private Array subCategory;
+    private JSONArray subCategory;
     private String img;
-    private String instrucctions;
+    private String instructions;
     private JSONArray ingredients;
 
-    public Recipe(String name, String category, Array subCategory, String img, String instrucctions, JSONArray ingredients) {
+    public Recipe(String name, String category, JSONArray subCategory, String img, String instructions, JSONArray ingredients) {
         this.name = name;
         this.category = category;
         this.subCategory = subCategory;
         this.img = img;
-        this.instrucctions = instrucctions;
+        this.instructions = instructions;
         this.ingredients = ingredients;
     }
 
@@ -27,7 +27,7 @@ public class Recipe {
         this.category = category;
         this.subCategory = subCategory;
         this.img = img;
-        this.instrucctions = instrucctions;
+        this.instructions = instructions;
         this.ingredients = ingredients;
     }
 
@@ -47,15 +47,27 @@ public class Recipe {
         return category;
     }
 
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                "name='" + name + '\'' +
+                ", category='" + category + '\'' +
+                ", subCategory=" + subCategory +
+                ", img='" + img + '\'' +
+                ", instructions='" + instructions + '\'' +
+                ", ingredients=" + ingredients +
+                '}';
+    }
+
     public void setCategory(String category) {
         this.category = category;
     }
 
-    public Array getSubCategory() {
+    public JSONArray getSubCategory() {
         return subCategory;
     }
 
-    public void setSubCategory(Array subCategory) {
+    public void setSubCategory(JSONArray subCategory) {
         this.subCategory = subCategory;
     }
 
@@ -67,12 +79,12 @@ public class Recipe {
         this.img = img;
     }
 
-    public String getInstrucctions() {
-        return instrucctions;
+    public String getInstructions() {
+        return instructions;
     }
 
-    public void setInstrucctions(String instrucctions) {
-        this.instrucctions = instrucctions;
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
     }
 
     public JSONArray getIngredients() {

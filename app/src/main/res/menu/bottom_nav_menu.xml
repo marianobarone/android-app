@@ -7,9 +7,9 @@
         android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_shop_list"
         android:icon="@drawable/ic_baseline_shopping_cart_24"
-        android:title="@string/title_stock" />
+        android:title="@string/title_lista_compras" />
 
     <item
         android:id="@+id/navigation_agregar_producto"
@@ -17,8 +17,13 @@
         android:title="@string/title_agregar_producto" />
 
     <item
-        android:id="@+id/navigation_mi_perfil"
-        android:icon="@drawable/ic_baseline_person_24"
-        android:title="@string/title_mi_perfil" />
+        android:id="@+id/navigation_recetas"
+        android:icon="@drawable/ic_baseline_dining_24"
+        android:title="Recetas" />
+
+<!--    <item-->
+<!--        android:id="@+id/navigation_mi_perfil"-->
+<!--        android:icon="@drawable/ic_baseline_person_24"-->
+<!--        android:title="@string/title_mi_perfil" />-->
 
 </menu>

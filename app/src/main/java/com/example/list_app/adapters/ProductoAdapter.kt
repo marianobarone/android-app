@@ -1,14 +1,12 @@
 package com.example.list_app.adapters
 
-import com.example.list_app.entities.Producto
+//import com.example.list_app.entities.Producto
 import com.example.list_app.holders.ProductoHolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.list_app.R
-import com.example.list_app.ui.home.HomeFragmentDirections
+import com.example.list_app.entities.Producto
 
 class ProductoAdapter(
     private var productosList: MutableList<Producto>
@@ -32,7 +30,7 @@ class ProductoAdapter(
 
     override fun onBindViewHolder(holder: ProductoHolder, i: Int) {
 
-        holder.setAtributosProducto(productosList[i].nombre, productosList[i].categoria, productosList[i].imgProducto, productosList[i].cantidadStock, productosList[i].esFrecuente)
+        holder.setAtributosProducto(productosList[i].nombre, productosList[i].categoria, productosList[i].imgProducto, productosList[i].cantidadStock, productosList[i].isEsFrecuente)
 
         holder.disminuirStock.setOnClickListener {
             System.out.println(productosList[i].nombre)
@@ -51,15 +49,13 @@ class ProductoAdapter(
         }
 
         holder.iconEsFrecuente.setOnClickListener {
-            System.out.println(productosList[i].esFrecuente)
+            System.out.println(productosList[i].isEsFrecuente)
 
-            holder.setEsProductoFrecuente(!productosList[i].esFrecuente)
+            holder.setEsProductoFrecuente(!productosList[i].isEsFrecuente)
 
-            productosList[i].esFrecuente = !productosList[i].esFrecuente
+            productosList[i].isEsFrecuente = !productosList[i].isEsFrecuente
 
-            System.out.println(productosList[i].esFrecuente)
-
+            System.out.println(productosList[i].isEsFrecuente)
         }
-
     }
 }
