@@ -1,6 +1,7 @@
 package com.example.list_app.ui.home
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +33,8 @@ import android.widget.EditText
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.gson.Gson
+import org.json.JSONArray
 
 
 class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
@@ -86,7 +89,16 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
     override fun onStart() {
         super.onStart()
         getRecipesData()
-        getUserData()
+
+        val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE)
+        if (!prefs.contains("user")){
+            getUserData()
+        }
+        else{
+            showCategories()
+        }
+
+
 //        getGroups()
 
         createGroupBtn = v.findViewById(R.id.createGroup)
@@ -192,20 +204,42 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
                 user.setUserName(response.getString("username"))
                 user.setGrupoSeleccionado(grupoSeleccionado)
 
-                categories.add(Categoria("Stock Completo"))
+                val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE).edit()
 
-                for (i in 0 until user.getGrupoSeleccionado().getCategoriasStock().length()) {
-                    categories.add(
-                        Categoria(
-                            grupoAPI.getJSONArray("categoriesStock").get(i).toString()
-                        )
-                    )
-                }
+                val gson = Gson()
+                val userJson = gson.toJson(user)
+                val groupsJson = gson.toJson(grupos)
+                val categories = gson.toJson(grupoSeleccionado.categoriasStock)
+                val stock = gson.toJson(grupoSeleccionado.stock)
+
+                prefs.putString("categorias",grupoSeleccionado.categoriasStock.toString())
+                prefs.putString("usuario", userJson);
+                prefs.putString("grupos", groupsJson);
+                prefs.putString("stock", grupoSeleccionado.stock.toString());
+                prefs.putString("listaPendientes", grupoSeleccionado.listaPendientes.toString());
+
+                prefs.apply();
+
+                showCategories()
+
+//                categories.add(Categoria("Stock Completo"))
+
+//                for (i in 0 until user.getGrupoSeleccionado().getCategoriasStock().length()) {
+//                    categories.add(
+//                        Categoria(
+//                            grupoAPI.getJSONArray("categoriesStock").get(i).toString()
+//                        )
+//                    )
+//                }
+
+//                val gson = Gson()
+//                val json: String = mPrefs.getString("MyObject", "")
+//                val obj: MyObject = gson.fromJson(json, MyObject::class.java)
 
                 System.out.println(user.toString())
 
-                categoriesListAdapter = CategoriaAdapter(categories, this.v);
-                recyclerCategories.adapter = categoriesListAdapter
+//                categoriesListAdapter = CategoriaAdapter(categories, this.v);
+//                recyclerCategories.adapter = categoriesListAdapter
 
             }, Response.ErrorListener { error ->
                 // handle error
@@ -214,7 +248,11 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
             @Throws(AuthFailureError::class)
             override fun getHeaders(): Map<String, String> {
                 val headers = HashMap<String, String>()
-                headers["Authorization"] = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE1MjU1NWEyMjM3MWYxMGY0ZTIyZjFhY2U3NjJmYzUwZmYzYmVlMGMiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiTGlzdCBBcHAiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUFUWEFKemg3Rm5VbDZHMWxOd0dDTUpkUHdNeXo4OF9DNlRvN21SSWhHeFA9czk2LWMiLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vbGlzdGFwcGRiIiwiYXVkIjoibGlzdGFwcGRiIiwiYXV0aF90aW1lIjoxNjM1MzgyMjcwLCJ1c2VyX2lkIjoiVjlqbm9oTVlETGZTbTRvZmQ3VHhlMXRack01MyIsInN1YiI6IlY5am5vaE1ZRExmU200b2ZkN1R4ZTF0WnJNNTMiLCJpYXQiOjE2MzUzODIyNzAsImV4cCI6MTYzNTM4NTg3MCwiZW1haWwiOiJiaWdsaWdhcy5saXN0QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7Imdvb2dsZS5jb20iOlsiMTEwMTgzMjIzODcxNTM0NDMxNjI2Il0sImVtYWlsIjpbImJpZ2xpZ2FzLmxpc3RAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.Ei38uNpwFaH9F3tQdvcFd2_x61zdEWoFDywHUDuA67nNAeGNCh8c4CLbzOX_rGLmnaK_GTluzBN7WPaanpq003vJ7J3n09Sx6H78bdOjKxx8Q1FGFmCMmLNUj9TAwXlHMdCvU0KwgISdL5JtaV6YTaQCC3ZF6RhH5AXuHvk7PNJ3-N5XhBrspiOktnB5jW7Zfpe5x0yxN3gqzslBu1HgAujEAJS3BZAzKYH2eXHxFdAgoBmAxRsUxWuZ32d9TQvcxhxG9zK3THF_5Oyc-PsBmsELClGCalQokANO87Ta3ws0i6C3crV8nkw9f3sHe8xjMuaUeZKcMCKiHKLMympbdw"
+                val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE)
+                val token = prefs.getString("token", null);
+
+                headers["Authorization"] = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE1MjU1NWEyMjM3MWYxMGY0ZTIyZjFhY2U3NjJmYzUwZmYzYmVlMGMiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiTW96byBEaWdpdGFsIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FBVFhBSndNWWp6Z3Uxdlk5V2JMRmg0TEFLT0lkYUtxVnFKUWJDd0RpVElsPXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2xpc3RhcHBkYiIsImF1ZCI6Imxpc3RhcHBkYiIsImF1dGhfdGltZSI6MTYzNTQ2OTAzNCwidXNlcl9pZCI6InpEVkUyZHVFWGJNTzFmMFNhNjZrZGFEQlQzSjMiLCJzdWIiOiJ6RFZFMmR1RVhiTU8xZjBTYTY2a2RhREJUM0ozIiwiaWF0IjoxNjM1NDY5MDM0LCJleHAiOjE2MzU0NzI2MzQsImVtYWlsIjoibW96by5kaWdpdGFsLmFwcEBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwNjg4Mjc1Nzg5NDc0MDI1MDIxNiJdLCJlbWFpbCI6WyJtb3pvLmRpZ2l0YWwuYXBwQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.CR1eUmj0JWzGBzYBLoxVioJHsLvxcw3Rz5q6CLXad9Y9M8CLuVF8m3gF14HnARt_k2cDe4jXTCXpymBRX1wNG-5do0hmDARvAJy6e6yXol0Wr01Jj4Gqj18PgStiSQ8HLeKTpiWubpPa8iRmWsLosEjQBfE4OfPY_2YEA4_eT_Qwxih0acbviPbVzRswOGBRA_X3W53DH6gs08lMpy40h8HfyoZqk2sczcXaWeiuHYevoNTUz27OrerqhtQrpvfkMMdwr7kHbwmQkd1hLkPLyBMaEewk0nQ3RObjhEmSNBfDK4zd1bLUGUhm9GI9t7B5vCJiO5JZXj3PwHGF2x3K6g"
+                headers["Authorization"] =  token!!
                 //headers["ANOTHER_CUSTOM_HEADER"] = "Google"
                 return headers
             }
@@ -222,6 +260,31 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
 
         // Add the request to the RequestQueue.
         MySingleton.getInstance(v.context).addToRequestQueue(userRequest);
+
+//        recyclerCategories.setHasFixedSize(true)
+//        recyclerCategories.layoutManager = GridLayoutManager(context, 2)
+    }
+
+    fun showCategories() {
+
+        val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE)
+        val gson = Gson()
+
+        val paramCategorias = prefs.getString("categorias", "")
+        val arrayCat = JSONArray(prefs.getString("categorias", ""))
+
+        categories.add(Categoria("Stock Completo"))
+
+        for (i in 0 until arrayCat.length()) {
+            categories.add(
+                Categoria(
+                    arrayCat.get(i).toString()
+                )
+            )
+        }
+
+        categoriesListAdapter = CategoriaAdapter(categories, this.v);
+        recyclerCategories.adapter = categoriesListAdapter
 
         recyclerCategories.setHasFixedSize(true)
         recyclerCategories.layoutManager = GridLayoutManager(context, 2)

@@ -39,4 +39,14 @@
         android:name="com.example.list_app.fragments.RecipeDetailsFragment"
         android:label="Detalles Receta"
         tools:layout="@layout/fragment_recipe_details" />
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.list_app.fragments.SignInFragment"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_sign_in" />
+    <activity
+        android:id="@+id/signInActivity"
+        android:name="com.example.list_app.SignInActivity"
+        android:label="activity_sign_in"
+        tools:layout="@layout/activity_sign_in" />
 </navigation>
