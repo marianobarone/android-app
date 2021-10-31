@@ -25,7 +25,6 @@ import org.json.JSONObject
 class ShopListFragment : Fragment() {
     val API_URL = "https://listapp2021.herokuapp.com"
 
-    private lateinit var dashboardViewModel: ShopListViewModel
     private var _binding: FragmentShopListBinding? = null
     lateinit var v: View
     var shopList: MutableList<Producto> = ArrayList<Producto>()

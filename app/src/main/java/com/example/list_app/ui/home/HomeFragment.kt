@@ -28,11 +28,19 @@ import com.example.list_app.entities.Usuario
 import org.json.JSONObject
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.content.DialogInterface
+import android.content.Intent
 
 import android.widget.EditText
+import com.example.list_app.SignInActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import org.json.JSONArray
 
@@ -40,24 +48,27 @@ import org.json.JSONArray
 class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
     private var _binding: FragmentHomeBinding? = null
 
-    val API_URL         = "https://listapp2021.herokuapp.com"
+    val API_URL = "https://listapp2021.herokuapp.com"
     val API_URL_RECIPES = "https://listapp2021.herokuapp.com/recipes"
 
     lateinit var v: View
 
     lateinit var recyclerCategories: RecyclerView
     lateinit var recyclerHomeRecipes: RecyclerView
-    lateinit var groupDropdown: AutoCompleteTextView
-
-    lateinit var dropdownOptions: ArrayAdapter<String>
-
+    private lateinit var categoriesListAdapter: CategoriaAdapter
+    private lateinit var recipesListAdapter: RecipeAdapter
     var categories: MutableList<Categoria> = ArrayList<Categoria>()
     var recipes: MutableList<Recipe> = ArrayList<Recipe>()
 
-    private lateinit var categoriesListAdapter: CategoriaAdapter
-    private lateinit var recipesListAdapter: RecipeAdapter
+    lateinit var groupDropdown: AutoCompleteTextView
+    lateinit var dropdownOptions: ArrayAdapter<String>
 
     lateinit var createGroupBtn: Button
+
+    //Firebase
+    private lateinit var googleSignInClient: GoogleSignInClient
+    lateinit var auth: FirebaseAuth
+    /////
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,6 +83,7 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
         recyclerHomeRecipes = v.findViewById(R.id.home_recipes_recycler_viewer)
 
         groupDropdown = v.findViewById(R.id.groupsDropdown)
+        createGroupBtn = v.findViewById(R.id.createGroup)
 
         categoriesListAdapter = CategoriaAdapter(categories, this.v);
         recipesListAdapter = RecipeAdapter(recipes, this.v);
@@ -79,34 +91,7 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
         recyclerCategories.adapter = categoriesListAdapter
         recyclerHomeRecipes.adapter = recipesListAdapter
 
-        return v
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        getRecipesData()
-
-        val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE)
-        if (!prefs.contains("user")){
-            getUserData()
-        }
-        else{
-            showCategories()
-        }
-
-
-//        getGroups()
-
-        createGroupBtn = v.findViewById(R.id.createGroup)
-
-//        val input = TextInputEditText(v.context)
-        //com.google.android.material.textfield.TextInputLayout
-
-        createGroupBtn.setOnClickListener(){
+        createGroupBtn.setOnClickListener() {
             val input = TextInputEditText(v.context)
 
             MaterialAlertDialogBuilder(v.context)
@@ -125,22 +110,39 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
                 }
                 .show()
         }
+
+        return v
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        getRecipesData()
+        getUserData()
+
+        //SI SOLO SE MUESTRAN CATEGORIAS Y GRUPOS, CUALQUIER CAMBIO QUE SE HAGA EN LA BASE NO IMPACTA PORQUE LOS show..() MUESTRAN DATA DEL SHARED PREFERENCES
+//        val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE)
+//
+//        //SI TIENE PREFS (SHARED PREFERENCES) == "usuario" SIGNIFICA QUE YA ESTÁ LOGUEADO EL USUARIO Y NO HACE FALTA VOLVER A CARGAR SHARED PREFERENCES
+//        if (!prefs.contains("usuario")) {
+//            getUserData()
+//        } else {
+//            showCategories()
+//            showGroups()
+//        }
     }
 
     fun getRecipesData() {
         val recipeRequest: JsonArrayRequest = object :
             JsonArrayRequest(Request.Method.GET, API_URL_RECIPES, null,
                 Response.Listener { response ->
-//                    val res = "Response: %s".format(response.toString())
-//
-//                    System.out.println(res)
-
-                    val user = Recipe()
 
                     for (i in 0 until response.length()) {
                         val unaReceta = response.get(i) as JSONObject
 
-//                        System.out.println(unaReceta.getString("nombre"))
                         recipes.add(
                             Recipe(
                                 unaReceta.getString("nombre"),
@@ -172,91 +174,79 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
         MySingleton.getInstance(v.context).addToRequestQueue(recipeRequest);
 
         recyclerHomeRecipes.setHasFixedSize(true)
-        recyclerHomeRecipes.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        recyclerHomeRecipes.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
     fun getUserData() {
-        val userRequest: JsonObjectRequest = object : JsonObjectRequest(Request.Method.GET, API_URL + "/users", null,
-            Response.Listener { response ->
-                val res = "Response: %s".format(response.toString())
+        //SE HACE LLAMADO A LA API Y SE OBTIENE LA DATA DEL USUARIO
+        val userRequest: JsonObjectRequest =
+            object : JsonObjectRequest(Request.Method.GET, API_URL + "/users", null,
+                Response.Listener { response ->
+                    val res = "Response: %s".format(response.toString())
 
-                System.out.println(res)
+                    System.out.println(res)
 
-                val user = Usuario()
-                val grupoSeleccionado = GrupoSeleccionado()
-                val grupoAPI = response.getJSONObject("selectedGroup")
-                val grupos = response.getJSONArray("idGroups");
-                val grupoName = grupoAPI.getString("name");
+                    val user = Usuario()
+                    val grupoSeleccionado = GrupoSeleccionado()
+                    val grupoAPI = response.getJSONObject("selectedGroup")
+                    val grupos = response.getJSONArray("idGroups");
 
-                //Se llena el dropdown con las casas del usuario
-                getGroups(grupos,grupoName)
+                    //GROUPNAME ES EL NOMBRE DEL GRUPO SELECCIONADO
+                    val grupoName = grupoAPI.getString("name");
 
-                grupoSeleccionado.setNombreGrupo(grupoAPI.getString("name"))
-                grupoSeleccionado.setDuenio(grupoAPI.getString("ownerName"))
-                grupoSeleccionado.setCategoriasStock(grupoAPI.getJSONArray("categoriesStock"))
-                grupoSeleccionado.setSubCategoriasStock(grupoAPI.getJSONArray("subcategoriesStock"))
-                grupoSeleccionado.setListaPendientes(grupoAPI.getJSONArray("shopList"))
-                grupoSeleccionado.setStock(grupoAPI.getJSONArray("stock"))
+                    //Se llena el dropdown con las casas del usuario
+                    getGroups(grupos, grupoName)
 
-                user.setUID(response.getString("uid"))
-                user.setMail(response.getString("mail"))
-                user.setUserName(response.getString("username"))
-                user.setGrupoSeleccionado(grupoSeleccionado)
+                    grupoSeleccionado.setNombreGrupo(grupoAPI.getString("name"))
+                    grupoSeleccionado.setDuenio(grupoAPI.getString("ownerName"))
+                    grupoSeleccionado.setCategoriasStock(grupoAPI.getJSONArray("categoriesStock"))
+                    grupoSeleccionado.setSubCategoriasStock(grupoAPI.getJSONArray("subcategoriesStock"))
+                    grupoSeleccionado.setListaPendientes(grupoAPI.getJSONArray("shopList"))
+                    grupoSeleccionado.setStock(grupoAPI.getJSONArray("stock"))
 
-                val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE).edit()
+                    user.setUID(response.getString("uid"))
+                    user.setMail(response.getString("mail"))
+                    user.setUserName(response.getString("username"))
+                    user.setGrupoSeleccionado(grupoSeleccionado)
 
-                val gson = Gson()
-                val userJson = gson.toJson(user)
-                val groupsJson = gson.toJson(grupos)
-                val categories = gson.toJson(grupoSeleccionado.categoriasStock)
-                val stock = gson.toJson(grupoSeleccionado.stock)
 
-                prefs.putString("categorias",grupoSeleccionado.categoriasStock.toString())
-                prefs.putString("usuario", userJson);
-                prefs.putString("grupos", groupsJson);
-                prefs.putString("stock", grupoSeleccionado.stock.toString());
-                prefs.putString("listaPendientes", grupoSeleccionado.listaPendientes.toString());
+                    //SE GUARDA DATA EN SHARED PREFERENCES
+                    val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE).edit()
 
-                prefs.apply();
+                    val gson = Gson()
+                    val userJson = gson.toJson(user)
+                    val groupsJson = gson.toJson(grupos)
+                    val categories = gson.toJson(grupoSeleccionado.categoriasStock)
+                    val stock = gson.toJson(grupoSeleccionado.stock)
 
-                showCategories()
+                    prefs.putString("categorias", grupoSeleccionado.categoriasStock.toString())
+                    prefs.putString("usuario", userJson);
+                    prefs.putString("nombreGrupoSeleccionado", grupoName);
+                    prefs.putString("grupos", response.getJSONArray("idGroups").toString());
+                    prefs.putString("stock", grupoSeleccionado.stock.toString());
+                    prefs.putString("listaPendientes", grupoSeleccionado.listaPendientes.toString()
+                    );
 
-//                categories.add(Categoria("Stock Completo"))
+                    prefs.apply();
 
-//                for (i in 0 until user.getGrupoSeleccionado().getCategoriasStock().length()) {
-//                    categories.add(
-//                        Categoria(
-//                            grupoAPI.getJSONArray("categoriesStock").get(i).toString()
-//                        )
-//                    )
-//                }
+                    showCategories()
 
-//                val gson = Gson()
-//                val json: String = mPrefs.getString("MyObject", "")
-//                val obj: MyObject = gson.fromJson(json, MyObject::class.java)
+                }, Response.ErrorListener { error ->
+                    // handle error
+                    System.out.println("Response: %s".format(error.toString()))
+                }) {
+                @Throws(AuthFailureError::class)
+                override fun getHeaders(): Map<String, String> {
+                    val headers = HashMap<String, String>()
+                    val prefs =
+                        requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE)
+                    val token = prefs.getString("token", null);
 
-                System.out.println(user.toString())
-
-//                categoriesListAdapter = CategoriaAdapter(categories, this.v);
-//                recyclerCategories.adapter = categoriesListAdapter
-
-            }, Response.ErrorListener { error ->
-                // handle error
-                System.out.println("Response: %s".format(error.toString()))
-            }) {
-            @Throws(AuthFailureError::class)
-            override fun getHeaders(): Map<String, String> {
-                val headers = HashMap<String, String>()
-                val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE)
-                val token = prefs.getString("token", null);
-
-                headers["Authorization"] = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE1MjU1NWEyMjM3MWYxMGY0ZTIyZjFhY2U3NjJmYzUwZmYzYmVlMGMiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiTW96byBEaWdpdGFsIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FBVFhBSndNWWp6Z3Uxdlk5V2JMRmg0TEFLT0lkYUtxVnFKUWJDd0RpVElsPXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2xpc3RhcHBkYiIsImF1ZCI6Imxpc3RhcHBkYiIsImF1dGhfdGltZSI6MTYzNTQ2OTAzNCwidXNlcl9pZCI6InpEVkUyZHVFWGJNTzFmMFNhNjZrZGFEQlQzSjMiLCJzdWIiOiJ6RFZFMmR1RVhiTU8xZjBTYTY2a2RhREJUM0ozIiwiaWF0IjoxNjM1NDY5MDM0LCJleHAiOjE2MzU0NzI2MzQsImVtYWlsIjoibW96by5kaWdpdGFsLmFwcEBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwNjg4Mjc1Nzg5NDc0MDI1MDIxNiJdLCJlbWFpbCI6WyJtb3pvLmRpZ2l0YWwuYXBwQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.CR1eUmj0JWzGBzYBLoxVioJHsLvxcw3Rz5q6CLXad9Y9M8CLuVF8m3gF14HnARt_k2cDe4jXTCXpymBRX1wNG-5do0hmDARvAJy6e6yXol0Wr01Jj4Gqj18PgStiSQ8HLeKTpiWubpPa8iRmWsLosEjQBfE4OfPY_2YEA4_eT_Qwxih0acbviPbVzRswOGBRA_X3W53DH6gs08lMpy40h8HfyoZqk2sczcXaWeiuHYevoNTUz27OrerqhtQrpvfkMMdwr7kHbwmQkd1hLkPLyBMaEewk0nQ3RObjhEmSNBfDK4zd1bLUGUhm9GI9t7B5vCJiO5JZXj3PwHGF2x3K6g"
-                headers["Authorization"] =  token!!
-                //headers["ANOTHER_CUSTOM_HEADER"] = "Google"
-                return headers
+                    headers["Authorization"] = token!!
+                    //headers["ANOTHER_CUSTOM_HEADER"] = "Google"
+                    return headers
+                }
             }
-        }
 
         // Add the request to the RequestQueue.
         MySingleton.getInstance(v.context).addToRequestQueue(userRequest);
@@ -265,12 +255,31 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
 //        recyclerCategories.layoutManager = GridLayoutManager(context, 2)
     }
 
+    fun getGroups(idGroups: org.json.JSONArray, selectedGroupName: kotlin.String) {
+
+        val groupOptions = ArrayList<String>()
+
+        for (i in 0 until idGroups.length()) {
+            val group = idGroups.get(i) as JSONObject
+
+            groupOptions.add(group.getString("name"))
+        }
+
+        dropdownOptions = ArrayAdapter<String>(v.context, R.layout.groups_list, groupOptions)
+
+        with(groupDropdown) {
+//            groupDropdown.setText("TIENE QUE IR EL NOMBRE DEL GRUPO SELECCIONADO DEL USUARIO")
+            groupDropdown.setText(selectedGroupName)
+            groupDropdown.setAdapter(dropdownOptions)
+
+            onItemClickListener = this@HomeFragment
+        }
+
+    }
+
     fun showCategories() {
 
         val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE)
-        val gson = Gson()
-
-        val paramCategorias = prefs.getString("categorias", "")
         val arrayCat = JSONArray(prefs.getString("categorias", ""))
 
         categories.add(Categoria("Stock Completo"))
@@ -290,31 +299,29 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
         recyclerCategories.layoutManager = GridLayoutManager(context, 2)
     }
 
-    fun getGroups(idGroups: org.json.JSONArray, selectedGroupName: kotlin.String){
+    fun showGroups() {
+
+        val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE)
+        val arrayGrupos = JSONArray(prefs.getString("grupos", ""))
 
         val groupOptions = ArrayList<String>()
 
-        for (i in 0 until idGroups.length()) {
-            val group = idGroups.get(i) as JSONObject
+        for (i in 0 until arrayGrupos.length()) {
+            val group = arrayGrupos.get(i) as JSONObject
 
             groupOptions.add(group.getString("name"))
         }
 
-        dropdownOptions = ArrayAdapter<String>(v.context, R.layout.groups_list,groupOptions)
+        dropdownOptions = ArrayAdapter<String>(v.context, R.layout.groups_list, groupOptions)
 
-        with(groupDropdown){
+        with(groupDropdown) {
 //            groupDropdown.setText("TIENE QUE IR EL NOMBRE DEL GRUPO SELECCIONADO DEL USUARIO")
-            groupDropdown.setText(selectedGroupName)
+            groupDropdown.setText(prefs.getString("nombreGrupoSeleccionado", ""))
             groupDropdown.setAdapter(dropdownOptions)
 
             onItemClickListener = this@HomeFragment
         }
 
-    }
-
-    fun onItemClick(position: Int): Boolean {
-        Snackbar.make(v, position.toString(), Snackbar.LENGTH_SHORT).show()
-        return true
     }
 
     override fun onDestroyView() {
@@ -323,6 +330,7 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
     }
 
     //Override de Groups Dropdown onClick
+    //FUNCIONA PARA CADA ONCLICK DEL DROPDOWN DE GROUPS
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         //ACÁ SE TIENE QUE CAMBIAR EL GRUPO SELECCIONADO DEL USUARIO, Y TRAER LA DATA DEL NUEVO GRUPO SELECCIONADO
         val item = parent?.getItemAtPosition(position).toString()

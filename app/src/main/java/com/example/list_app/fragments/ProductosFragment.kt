@@ -50,46 +50,40 @@ class ProductosFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
     }
 
-
     override fun onStart() {
         super.onStart()
 
         categoria = arguments?.getString("categoria").toString()
 
-        val user = Usuario()
-
         val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE)
-        val gson = Gson()
-
-        val stockParam = prefs.getString("stock", "")
-//        val arrayStockJson = JSONArray(prefs.getString("nuevasCat", ""))
-//        val arrayStockJson: Producto = gson.fromJson(stockParam, Producto::class.java)
+        //SE OBTIENE EL STOCK GUARDADO DESDE LAS SHARED PREFERENCES
         val arrayStockJson = JSONArray(prefs.getString("stock", ""))
 
-        for (i in 0 until arrayStockJson.length()) {
-            val unProducto = arrayStockJson.get(i) as JSONObject
+        if(arrayStockJson.length() != 0){
+            for (i in 0 until arrayStockJson.length()) {
+                val unProducto = arrayStockJson.get(i) as JSONObject
 
-            if (unProducto.getString("categoria") == categoria || categoria == "Stock Completo"){
-                productos.add(
-                    Producto(
-                        unProducto.getString("nombreProducto"),
-                        unProducto.getString("categoria"),
-                        unProducto.getString("foto"),
-                        unProducto.getInt("cantidad"),
-                        unProducto.getBoolean("esFrecuente"),
+                //SE FILTRA EL STOCK SEGUN LA CATEGORIA SELECCIONADA
+                if (unProducto.getString("categoria") == categoria || categoria == "Stock Completo"){
+                    productos.add(
+                        Producto(
+                            unProducto.getString("nombreProducto"),
+                            unProducto.getString("categoria"),
+                            unProducto.getString("foto"),
+                            unProducto.getInt("cantidad"),
+                            unProducto.getBoolean("esFrecuente"),
+                        )
                     )
-                )
+                }
             }
         }
 
-        //Configuración Obligatoria
+
         recyclerProductos.setHasFixedSize(true)
         linearLayoutManager = LinearLayoutManager(context)
         recyclerProductos.layoutManager = linearLayoutManager
 
-
         productosListAdapter = ProductoAdapter(productos);
-
         recyclerProductos.adapter = productosListAdapter
     }
 
@@ -97,9 +91,6 @@ class ProductosFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arguments?.let{
-
-//            val prop: String
-
             categoria = arguments?.getString("categoria").toString()
 
             System.out.println(categoria)

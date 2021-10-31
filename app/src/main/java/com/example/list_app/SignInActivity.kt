@@ -1,6 +1,5 @@
 package com.example.list_app
 
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -17,34 +16,31 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.auth.GetTokenResult
-
-import com.google.android.gms.tasks.OnSuccessListener
-import androidx.annotation.NonNull
-
-import com.google.android.gms.tasks.OnCompleteListener
-
+import androidx.appcompat.app.AlertDialog
+import com.google.android.material.textfield.TextInputEditText
 
 class SignInActivity : AppCompatActivity() {
 
-
     private lateinit var auth: FirebaseAuth
-    // [END declare_auth]
 
     private lateinit var googleSignInClient: GoogleSignInClient
 
-    lateinit var sign_in_button: SignInButton
-    lateinit var logOut: Button
+    lateinit var googleSignInBtn: SignInButton
+    lateinit var newEmailuserBtn: Button
+    lateinit var emailSingInBtn: Button
 
-//    val PREFS_EDIT = getSharedPreferences("credentials", Context.MODE_PRIVATE).edit()
+    lateinit var email: TextInputEditText
+    lateinit var password: TextInputEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
 
-
-        sign_in_button = findViewById(R.id.sign_in_button)
-        logOut = findViewById(R.id.logOut)
+        googleSignInBtn = findViewById(R.id.sign_in_button)
+        newEmailuserBtn = findViewById(R.id.createEmailUser)
+        emailSingInBtn = findViewById(R.id.logInEmailUser)
+        email = findViewById(R.id.emailInput)
+        password = findViewById(R.id.passwordInput)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -55,48 +51,52 @@ class SignInActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
-
-        sign_in_button.setOnClickListener() {
-//            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-//            val account = task.getResult(ApiException::class.java)!!
-//            Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
-//            firebaseAuthWithGoogle(account.idToken!!)
+        googleSignInBtn.setOnClickListener() {
             signIn()
-//            firebaseAuthWithGoogle()
         }
 
-        logOut.setOnClickListener() {
-//            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-//            val account = task.getResult(ApiException::class.java)!!
-//            Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
-//            firebaseAuthWithGoogle(account.idToken!!)
-            signOut()
-            System.out.println("Desconetado")
-//            firebaseAuthWithGoogle()
+        newEmailuserBtn.setOnClickListener() {
+            //SE CREA USUARIO CON EMAIL Y PASSWORD
+            if (email.text!!.isNotEmpty() && password.text!!.isNotEmpty()) {
+                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.text.toString(), password.text.toString()).addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            goToHome()
+                        } else {
+                            showAlert(it.exception?.message.toString())
+                        }
+                    }
+            } else {
+                showAlert("")
+            }
+        }
+
+        emailSingInBtn.setOnClickListener() {
+            //LOGIN CON EMAIL Y PASSWORD
+            if (email.text!!.isNotEmpty() && password.text!!.isNotEmpty()) {
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(email.text.toString(), password.text.toString()).addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            goToHome()
+                        } else {
+                            showAlert("")
+                        }
+                    }
+            } else {
+                showAlert("")
+            }
         }
     }
 
     override fun onStart() {
         super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
+
         val currentUser = auth.currentUser
+        //CHEKEA SI HAY USUARIO AUTENTICADO
         updateUI(currentUser)
     }
 
     private fun signIn() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
-    }
-
-    private fun signOut() {
-        Firebase.auth.signOut()
-        googleSignInClient.signOut()
-            .addOnCompleteListener(this) {
-                // ...
-                val prefs = getSharedPreferences("credentials", Context.MODE_PRIVATE).edit()
-                prefs.clear()
-                prefs.apply()
-            }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -118,6 +118,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun firebaseAuthWithGoogle(idToken: String) {
+        //LOGIN CON GOOGLE
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
@@ -139,34 +140,45 @@ class SignInActivity : AppCompatActivity() {
 
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
-////            user.getIdToken(true).addOnSuccessListener { result ->
-////                val idToken = result.token
-////                //Do whatever
-////                Log.d(TAG, "GetTokenResult result = $idToken")
-////            }
-//
-            user!!.getIdToken(true)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val idToken: String? = task.result.token
+            goToHome()
+        }
+    }
 
-                        val prefs = getSharedPreferences("credentials", Context.MODE_PRIVATE).edit()
-                        prefs.putString("token", idToken);
-                        prefs.apply()
+    private fun goToHome() {
+        //SE OBTIENE TOKEN DE USUARIO AUTENTICADO Y SE REDIRIGE A HOME
+        val user = auth.currentUser
 
-                        // Send token to your backend via HTTPS
-                        val i = Intent(applicationContext, MainActivity::class.java)
-                        startActivity(i)
-                        // ...
-                    }
-                    else {
-                        // Handle error -> task.getException();
-                    }
+        user!!.getIdToken(true)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val idToken: String? = task.result.token
+
+                    val prefs = getSharedPreferences(
+                        "credentials",
+                        Context.MODE_PRIVATE
+                    ).edit()
+                    prefs.putString("token", idToken);
+                    prefs.putString("userDisplayName", user.displayName);
+                    prefs.putString("userEmail", user.email);
+                    prefs.apply()
+
+                    // Send token to your backend via HTTPS
+                    val i = Intent(applicationContext, MainActivity::class.java)
+                    startActivity(i)
+                    // ...
+                } else {
+
                 }
-        }
-        else {
+            }
+    }
 
-        }
+    private fun showAlert(error: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Error")
+        builder.setMessage(if (error == "") "Usuario y/o contraseña incorrecto/s" else error)
+        builder.setPositiveButton("Aceptar", null)
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 
     companion object {
