@@ -15,9 +15,11 @@
     >
 
     <LinearLayout
+        android:id="@+id/ingredienteContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@android:color/holo_green_light">
 
         <TextView
             android:id="@+id/ingredienteNombre"

@@ -3,6 +3,34 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.37864583333333335" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.37864583333333335" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/drawable/ic_baseline_add_circle_outline_24.xml" value="0.37864583333333335" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/drawable/ic_baseline_dining_24.xml" value="0.37864583333333335" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.32760416666666664" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.32760416666666664" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/drawable/ic_baseline_food_bank_24.xml" value="0.37864583333333335" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/drawable/ic_baseline_house_24.xml" value="0.37864583333333335" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.37864583333333335" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/drawable/ic_baseline_remove_24.xml" value="0.37864583333333335" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/drawable/ic_baseline_shopping_cart_24.xml" value="0.37864583333333335" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.37864583333333335" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.37864583333333335" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/drawable/ic_launcher_background.xml" value="0.37864583333333335" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.37864583333333335" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/layout/activity_main.xml" value="0.3625" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/layout/activity_sign_in.xml" value="0.3625" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/layout/fragment_home.xml" value="0.5" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/layout/fragment_lista_stock.xml" value="0.19114583333333332" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/layout/fragment_products_to_add_list.xml" value="0.3625" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/layout/fragment_profile.xml" value="0.3625" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/layout/fragment_recipe_details.xml" value="0.3625" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/layout/fragment_shop_list.xml" value="0.3625" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/layout/ingredient_item.xml" value="0.3625" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/layout/producto_item.xml" value="0.3625" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/layout/recipe_item.xml" value="0.3625" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/layout/shop_list_item.xml" value="0.5" />
+        <entry key="..\:/Analista de Sistemas/4to Cuatrimestre - Proyecto Final/Trabajo Practico/proyectofinal-mobile/app/src/main/res/layout/shop_list_item2.xml" value="0.75" />
         <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/05 - TALLER DE PROGRAMACION 3/Fix proyecto-final/proyectofinal-mobile/app/src/main/res/layout/activity_main.xml" value="0.27870370370370373" />
         <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/05 - TALLER DE PROGRAMACION 3/Fix proyecto-final/proyectofinal-mobile/app/src/main/res/layout/fragment_home.xml" value="0.34444444444444444" />
         <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/05 - TALLER DE PROGRAMACION 3/TPs - Kotlin/proyecto list-app/app/src/main/res/drawable/ic_baseline_add_circle_outline_24.xml" value="0.253125" />
@@ -32,6 +60,13 @@
         <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/05 - TALLER DE PROGRAMACION 3/TPs - Kotlin/prueba/app/src/main/res/layout/fragment_notifications.xml" value="0.36666666666666664" />
         <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/05 - TALLER DE PROGRAMACION 3/TPs - Kotlin/prueba/app/src/main/res/layout/producto_item.xml" value="0.33" />
         <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/05 - TALLER DE PROGRAMACION 3/TPs - Kotlin/prueba/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/mobile-actualizado/proyectofinal-mobile/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/mobile-actualizado/proyectofinal-mobile/app/src/main/res/layout/activity_sign_in.xml" value="0.36666666666666664" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/mobile-actualizado/proyectofinal-mobile/app/src/main/res/layout/fragment_home.xml" value="0.36666666666666664" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/mobile-actualizado/proyectofinal-mobile/app/src/main/res/layout/fragment_profile.xml" value="0.36666666666666664" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/mobile-actualizado/proyectofinal-mobile/app/src/main/res/layout/producto_item.xml" value="0.36666666666666664" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/mobile-actualizado/proyectofinal-mobile/app/src/main/res/layout/recipe_item.xml" value="0.36666666666666664" />
+        <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/mobile-actualizado/proyectofinal-mobile/app/src/main/res/layout/shop_list_item.xml" value="0.25" />
         <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/drawable/ic_baseline_add_circle_outline_24.xml" value="0.2890625" />
         <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.2890625" />
         <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/layout/activity_log_in.xml" value="0.24479166666666666" />
@@ -53,6 +88,8 @@
         <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/layout/recipe_item.xml" value="0.36666666666666664" />
         <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/layout/shop_list_item.xml" value="0.36666666666666664" />
         <entry key="..\:/ORT/2do - 2021/2do CUATRIMESTRE - 2021/06 - PROYECTO FINAL/REPOS PROYECTO FINAL/proyectofinal-mobile/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Todo lo de la Escuela/ORT/Proyecto Final/proyectofinal-mobile/app/src/main/res/layout/fragment_profile.xml" value="0.29347826086956524" />
+        <entry key="..\:/proyectofinal-mobile/app/src/main/res/layout/activity_main.xml" value="0.21145833333333333" />
       </map>
     </option>
   </component>

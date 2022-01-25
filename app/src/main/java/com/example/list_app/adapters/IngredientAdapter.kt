@@ -30,6 +30,6 @@ class IngredientAdapter(
     }
 
     override fun onBindViewHolder(holder: IngredientHolder, i: Int) {
-        holder.setIngredientsAttributes(ingredientsList[i].nombre, ingredientsList[i].cantidad, ingredientsList[i].tipoUnidad)
+        holder.setIngredientsAttributes(ingredientsList[i].nombre, ingredientsList[i].cantidad, ingredientsList[i].tipoUnidad, ingredientsList[i].nombreGenerico)
     }
 }

@@ -1,22 +1,30 @@
 package com.example.list_app.entities;
 
 public class Ingredient {
-    private String nombre;
     private double cantidad;
     private String tipoUnidad;
+    private String nombreGenerico;
+
+    public String getNombreGenerico() {
+        return nombreGenerico;
+    }
+
+    public void setNombreGenerico(String nombreGenerico) {
+        this.nombreGenerico = nombreGenerico;
+    }
 
     public Ingredient(String nombre, double cantidad, String tipoUnidad) {
-        this.nombre = nombre;
+        this.nombreGenerico = nombre;
         this.cantidad = cantidad;
         this.tipoUnidad = tipoUnidad;
     }
 
     public String getNombre() {
-        return nombre;
+        return nombreGenerico;
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombreGenerico = nombre;
     }
 
     public double getCantidad() {

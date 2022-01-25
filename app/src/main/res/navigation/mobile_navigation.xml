@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_navigation_home_to_recipeDetailsFragment"
             app:destination="@id/recipeDetailsFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_barcodeFragment"
+            app:destination="@id/barcodeFragment" />
     </fragment>
 
     <fragment
@@ -44,4 +47,27 @@
         android:name="com.example.list_app.ui.profile.ProfileFragment"
         android:label="@string/title_mi_perfil"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/addProductManuallyFragment"
+        android:name="com.example.list_app.fragments.AddProductManuallyFragment"
+        android:label="Agregar Producto - Categorias"
+        tools:layout="@layout/fragment_add_product_manually">
+        <action
+            android:id="@+id/action_addProductManuallyFragment_to_productsToAddListFragment"
+            app:destination="@id/productsToAddListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productsToAddListFragment"
+        android:name="com.example.list_app.fragments.ProductsToAddListFragment"
+        android:label="Agregar Producto - Items"
+        tools:layout="@layout/fragment_products_to_add_list" />
+    <fragment
+        android:id="@+id/barcodeFragment"
+        android:name="BarcodeFragment"
+        android:label="BarcodeFragment" >
+        <action
+            android:id="@+id/action_barcodeFragment_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
+
 </navigation>

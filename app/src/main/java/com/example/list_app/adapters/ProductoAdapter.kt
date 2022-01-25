@@ -1,6 +1,5 @@
 package com.example.list_app.adapters
 
-//import com.example.list_app.entities.Producto
 import com.example.list_app.holders.ProductoHolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -30,28 +29,32 @@ class ProductoAdapter(
 
     override fun onBindViewHolder(holder: ProductoHolder, i: Int) {
 
-        holder.setAtributosProducto(productosList[i].nombre, productosList[i].categoria, productosList[i].imgProducto, productosList[i].cantidadStock, productosList[i].isEsFrecuente)
+        holder.setAtributosProducto(productosList[i].nombreProducto, productosList[i].categoria, productosList[i].foto, productosList[i].cantidad, productosList[i].isEsFrecuente)
 
         holder.disminuirStock.setOnClickListener {
-            System.out.println(productosList[i].nombre)
+            System.out.println(productosList[i].nombreProducto)
 
-            if ((productosList[i].cantidadStock - 1 ) >= 0) {
-                holder.setCantidadStock(--productosList[i].cantidadStock)
+            if ((productosList[i].cantidad - 1 ) >= 0) {
+                holder.setCantidadStock(--productosList[i].cantidad, productosList[i].id, -1, productosList[i].isEsFrecuente)
+                if (productosList[i].cantidad == 0) {
+                    productosList.removeAt(i)
+                    this.notifyDataSetChanged()
+                }
             }
 
-            System.out.println(productosList[i].cantidadStock)
+            //System.out.println(productosList[i].cantidad)
         }
 
         holder.aumentarStock.setOnClickListener {
-            System.out.println(productosList[i].nombre)
-            holder.setCantidadStock(++productosList[i].cantidadStock)
-            System.out.println(productosList[i].cantidadStock)
+            System.out.println(productosList[i].nombreProducto)
+            holder.setCantidadStock(++productosList[i].cantidad, productosList[i].id, 1, productosList[i].isEsFrecuente)
+            System.out.println(productosList[i].cantidad)
         }
 
         holder.iconEsFrecuente.setOnClickListener {
             System.out.println(productosList[i].isEsFrecuente)
 
-            holder.setEsProductoFrecuente(!productosList[i].isEsFrecuente)
+            holder.setEsProductoFrecuente(!productosList[i].isEsFrecuente, productosList[i].id)
 
             productosList[i].isEsFrecuente = !productosList[i].isEsFrecuente
 

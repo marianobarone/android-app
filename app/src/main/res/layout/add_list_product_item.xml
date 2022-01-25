@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_add_list_producto_item"
+    android:layout_width="100dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:backgroundTintMode="add"
+    android:gravity="center_horizontal"
+    android:padding="200dp"
+    android:textAlignment="center"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="8dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:textAlignment="center">
+
+
+        <ImageView
+            android:id="@+id/addListaProductoImg"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            app:srcCompat="@mipmap/ic_launcher"
+            android:layout_marginTop="30dp">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/nombreAddListProducto"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="Nombre Producto"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/disminuirCantidadProducto"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="0dp"
+                app:backgroundTint="@color/grey_btn"
+                app:cornerRadius="100dp"
+                app:icon="@drawable/ic_baseline_remove_24"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp" />
+
+            <TextView
+                android:id="@+id/cantidadProductoAgregar"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="1"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/aumentarCantidadProducto"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="0dp"
+                app:backgroundTint="@color/grey_btn"
+                app:cornerRadius="100dp"
+                app:icon="@drawable/ic_baseline_add_24"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                tools:ignore="TouchTargetSizeCheck" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addProductToShopList"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerHorizontal="true"
+            app:tint="@color/color_secondary"
+            android:layout_gravity="end"
+            android:gravity="center_horizontal|bottom"
+            app:backgroundTint="@color/white"
+            app:fabCustomSize="35dp"
+            app:fabSize="mini"
+            app:iconGravity="start"
+            app:layout_anchor="@id/addListaProductoImg"
+            app:srcCompat="@drawable/ic_baseline_pending_actions_24"
+            ></com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addProductToStock"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerHorizontal="true"
+            app:tint="@color/color_secondary"
+            android:layout_gravity="end"
+            android:gravity="center_horizontal|top"
+            app:backgroundTint="@color/white"
+            app:fabCustomSize="35dp"
+            app:fabSize="mini"
+            app:iconGravity="start"
+            app:layout_anchor="@id/addListaProductoImg"
+            app:srcCompat="@drawable/ic_baseline_add_product_cart"
+            ></com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

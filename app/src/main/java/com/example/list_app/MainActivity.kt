@@ -1,5 +1,6 @@
 package com.example.list_app
 
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -8,14 +9,10 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.android.volley.RequestQueue
 import com.example.list_app.databinding.ActivityMainBinding
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.auth.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -55,15 +52,21 @@ class MainActivity : AppCompatActivity() {
                     val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
                     val navController = navHostFragment.navController
 
-                    //REDIRIGIR A LA VISTA DE CARGA MANUAL (RECYCLER VIEW DE PRODUCTOS GS-1
-                    navController.navigate(R.id.listaProductos)
+                    navController.navigate(R.id.addProductManuallyFragment)
 
                 }
                 .setNegativeButton("BARCODE") { dialog, which ->
-                    //REDIRIGIR A LA VISTA DE CARGA CON CODIGO DE BARRAS
+                    val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
+                    val navController = navHostFragment.navController
+
+                    navController.navigate(R.id.barcodeFragment)
                 }
                 .show()
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onStart() {

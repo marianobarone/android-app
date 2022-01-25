@@ -2,23 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
     android:orientation="vertical"
     tools:context=".ui.home.HomeFragment">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:gravity="center_horizontal"
         android:orientation="horizontal">
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="300dp"
+            android:layout_width="260dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="5dp"
             android:hint="Seleccionar grupo"
             app:startIconDrawable="@drawable/ic_baseline_house_24">
 
@@ -27,8 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none"
-                android:padding="0dp">
-            </AutoCompleteTextView>
+                android:padding="0dp"></AutoCompleteTextView>
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -36,15 +38,26 @@
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="3dp"
             android:gravity="center"
             android:padding="0dp"
+            app:backgroundTint="@color/green_primary"
             app:icon="@drawable/ic_baseline_add_24"
             app:iconGravity="textStart"
             app:iconPadding="0dp"
-            android:layout_marginBottom="3dp"
-            tools:ignore="TouchTargetSizeCheck" />
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
     </LinearLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:padding="10dp"
+        android:text="Recetas para disfrutar"
+        android:textColor="@color/color_primary"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="wrap_content"
@@ -53,7 +66,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/home_recipes_recycler_viewer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="#26CFCFCF" />
     </androidx.core.widget.NestedScrollView>
 
     <TextView
@@ -63,14 +77,15 @@
         android:layout_marginHorizontal="10dp"
         android:padding="10dp"
         android:text="Categorias Stock"
+        android:textColor="@color/color_primary"
         android:textSize="16sp"
         android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/categorias_recycler_viewer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"></androidx.recyclerview.widget.RecyclerView>
 
 
 </LinearLayout>

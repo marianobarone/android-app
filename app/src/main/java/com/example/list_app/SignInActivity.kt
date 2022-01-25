@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -25,6 +27,7 @@ class SignInActivity : AppCompatActivity() {
 
     private lateinit var googleSignInClient: GoogleSignInClient
 
+
     lateinit var googleSignInBtn: SignInButton
     lateinit var newEmailuserBtn: Button
     lateinit var emailSingInBtn: Button
@@ -32,15 +35,20 @@ class SignInActivity : AppCompatActivity() {
     lateinit var email: TextInputEditText
     lateinit var password: TextInputEditText
 
+    lateinit var screen: LinearLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
+
 
         googleSignInBtn = findViewById(R.id.sign_in_button)
         newEmailuserBtn = findViewById(R.id.createEmailUser)
         emailSingInBtn = findViewById(R.id.logInEmailUser)
         email = findViewById(R.id.emailInput)
         password = findViewById(R.id.passwordInput)
+
+        screen = findViewById(R.id.loginScreen)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -99,6 +107,9 @@ class SignInActivity : AppCompatActivity() {
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
+
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -141,6 +152,8 @@ class SignInActivity : AppCompatActivity() {
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
             goToHome()
+        } else {
+            screen.setVisibility(View.VISIBLE)
         }
     }
 
@@ -158,8 +171,6 @@ class SignInActivity : AppCompatActivity() {
                         Context.MODE_PRIVATE
                     ).edit()
                     prefs.putString("token", idToken);
-                    prefs.putString("userDisplayName", user.displayName);
-                    prefs.putString("userEmail", user.email);
                     prefs.apply()
 
                     // Send token to your backend via HTTPS
@@ -167,7 +178,7 @@ class SignInActivity : AppCompatActivity() {
                     startActivity(i)
                     // ...
                 } else {
-
+                    screen.setVisibility(View.VISIBLE)
                 }
             }
     }

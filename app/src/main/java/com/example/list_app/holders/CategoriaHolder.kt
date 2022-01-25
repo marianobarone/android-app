@@ -11,11 +11,13 @@ class CategoriaHolder (v: View) : RecyclerView.ViewHolder(v) {
 
     private var view: View
 
-    var cardCategoria: ImageView
+//    var cardCategoria: ImageView
+    var cardCategoria: CardView
 
     init {
         this.view = v
-        this.cardCategoria = view.findViewById(R.id.imgCategoria)
+//        this.cardCategoria = view.findViewById(R.id.imgCategoria)
+        this.cardCategoria = view.findViewById(R.id.card_categoria_package_item)
     }
 
     fun setName(nombre: String) {
@@ -24,14 +26,14 @@ class CategoriaHolder (v: View) : RecyclerView.ViewHolder(v) {
         nombreCategoria.text = nombre
 
         when(nombre){
-            "Stock Completo"    ->  imgCategoria.setImageResource(R.drawable.cat_todo);
-            "Frutas y Verduras" ->  imgCategoria.setImageResource(R.drawable.cat_frutas_verduras);
-            "Higiene"           ->  imgCategoria.setImageResource(R.drawable.cat_higiene);
-            "Limpieza"          ->  imgCategoria.setImageResource(R.drawable.cat_limpieza);
-            "Carnes"            ->  imgCategoria.setImageResource(R.drawable.cat_carnes);
-            "Bebidas"           ->  imgCategoria.setImageResource(R.drawable.cat_bebidas);
+            "Stock Completo"    ->  imgCategoria.setImageResource(R.drawable.icon_stock_completo);
+            "Frutas y Verduras" ->  imgCategoria.setImageResource(R.drawable.icon_frutas_verduras);
+            "Higiene"           ->  imgCategoria.setImageResource(R.drawable.icon_higiene);
+            "Limpieza"          ->  imgCategoria.setImageResource(R.drawable.icon_limpieza);
+            "Carnes"            ->  imgCategoria.setImageResource(R.drawable.icon_carnes);
+            "Bebidas"           ->  imgCategoria.setImageResource(R.drawable.icon_bebidas);
+            "Lacteos"           ->  imgCategoria.setImageResource(R.drawable.icon_lacteos);
         }
-
     }
 
     fun getCardLayout(): CardView {

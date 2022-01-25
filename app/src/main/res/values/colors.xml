@@ -3,8 +3,28 @@
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
+    <color name="grey_btn">#CFCFCF</color>
+    <color name="disable_btn">#616161</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="add_product_color">#64FFDA</color>
+    <color name="color_viejo">#64FFDA</color>
+    <color name="addBtn">#ff7961</color>
+
+
+<!--    <color name="color_primary">#ff8a65</color>-->
+<!--    <color name="color_secondary">#ffbb93</color>   -->
+
+    <color name="color_primary">#f44336</color>
+    <color name="color_secondary">#ff7961</color>
+    <color name="green_primary">#00c853</color>
+    <color name="green_secondary">#00e676</color>
+
+<!--    #ff441f-->
+
+<!--    rojo[500] &ndash;&gt; #f44336-->
+<!--    green[a700] &ndash;&gt; #00c853-->
+<!--    green[400] &ndash;&gt; #00e676-->
 </resources>

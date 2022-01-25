@@ -54,10 +54,43 @@
             android:text="TextView" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp">
+
+        <TextView
+            android:id="@+id/labelSelectedGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="Codigo de Grupo: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/SelectedGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="TextView" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/addGroupBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginVertical="30dp"
+        android:text="Unirme a un grupo" />
+
     <Button
         android:id="@+id/logOutBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="40dp"
         android:text="Cerrar Sesión" />
+
 </LinearLayout>

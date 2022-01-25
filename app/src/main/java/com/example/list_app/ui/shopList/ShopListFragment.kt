@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,10 +19,7 @@ import com.example.list_app.R
 import com.example.list_app.adapters.ShopListAdapter
 import com.example.list_app.databinding.FragmentShopListBinding
 import com.example.list_app.entities.*
-import com.example.list_app.ui.dashboard.ShopListViewModel
-import com.google.gson.Gson
 import org.json.JSONArray
-import org.json.JSONObject
 
 class ShopListFragment : Fragment() {
     val API_URL = "https://listapp2021.herokuapp.com"
@@ -30,6 +29,8 @@ class ShopListFragment : Fragment() {
     var shopList: MutableList<Producto> = ArrayList<Producto>()
     lateinit var recyclerShopList: RecyclerView
     private lateinit var shopListAdapter: ShopListAdapter
+    lateinit var agregarTodoStock: Button
+    lateinit var noShopListMsg: LinearLayout
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -37,7 +38,47 @@ class ShopListFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        showShopList()
+        getShopList()
+        setNoShopListMsg(shopList.size)
+    }
+
+    fun getShopList() {
+        //SE HACE LLAMADO A LA API Y SE OBTIENE LA DATA DEL USUARIO
+        val userRequest: JsonObjectRequest =
+            object : JsonObjectRequest(Request.Method.GET, API_URL + "/users", null,
+                Response.Listener { response ->
+                    val res = "Response: %s".format(response.toString())
+
+                    val grupoSeleccionado = GrupoSeleccionado()
+                    val grupoAPI = response.getJSONObject("selectedGroup")
+
+                    grupoSeleccionado.setListaPendientes(grupoAPI.getJSONArray("shopList"))
+
+                    //SE GUARDA DATA EN SHARED PREFERENCES
+                    val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE).edit()
+                    prefs.putString("listaPendientes", grupoSeleccionado.listaPendientes.toString());
+
+                    prefs.apply();
+
+                    showShopList()
+
+                }, Response.ErrorListener { error ->
+                    // handle error
+                    System.out.println("Response: %s".format(error.toString()))
+                }) {
+                @Throws(AuthFailureError::class)
+                override fun getHeaders(): Map<String, String> {
+                    val headers = HashMap<String, String>()
+                    val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE)
+                    val token = prefs.getString("token", null);
+
+                    headers["Authorization"] = token!!
+                    //headers["ANOTHER_CUSTOM_HEADER"] = "Google"
+                    return headers
+                }
+            }
+
+        MySingleton.getInstance(v.context).addToRequestQueue(userRequest);
     }
 
     fun showShopList(){
@@ -49,14 +90,17 @@ class ShopListFragment : Fragment() {
 
             shopList.add(
                 Producto(
-                    item.getString("nombreGenerico").toString(),
+                    item.getString("id").toString(),
+                    item.getString("nombreProducto").toString(),
                     item.getString("categoria").toString(),
                     item.getInt("cantidad")
                 )
             )
         }
 
-        shopListAdapter = ShopListAdapter(shopList);
+        setNoShopListMsg(shopList.size)
+
+        shopListAdapter = ShopListAdapter(shopList, agregarTodoStock);
         recyclerShopList.adapter = shopListAdapter
 
         recyclerShopList.setHasFixedSize(true)
@@ -69,14 +113,15 @@ class ShopListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        //return inflater.inflate(R.layout.fragment_shop_list, container, false)
-
         shopList = ArrayList<Producto>()
 
         v = inflater.inflate(R.layout.fragment_shop_list, container, false)
-        recyclerShopList = v.findViewById(R.id.recycler_shop_list)
+        noShopListMsg = v.findViewById(R.id.noShopListMsg)
 
-        shopListAdapter = ShopListAdapter(shopList);
+        recyclerShopList = v.findViewById(R.id.recycler_shop_list)
+        agregarTodoStock = v.findViewById(R.id.agregarTodoStock)
+
+        shopListAdapter = ShopListAdapter(shopList, agregarTodoStock);
 
         recyclerShopList.adapter = shopListAdapter
 
@@ -86,5 +131,16 @@ class ShopListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun setNoShopListMsg(productsSize: Int){
+        if(productsSize == 0){
+            noShopListMsg.setVisibility(View.VISIBLE)
+            agregarTodoStock.setVisibility(View.INVISIBLE)
+        }
+        else{
+            noShopListMsg.setVisibility(View.INVISIBLE)
+            agregarTodoStock.setVisibility(View.VISIBLE)
+        }
     }
 }

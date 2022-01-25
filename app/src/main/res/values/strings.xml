@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ListApp</string>
     <string name="title_home">Home</string>
-    <string name="title_lista_compras">Lista de Compras</string>
+    <string name="title_lista_compras">Lista</string>
     <string name="title_recetas">Recetas</string>
     <string name="title_mi_perfil">Mi Perfil</string>
     <string name="url_API">https://listapp2021.herokuapp.com</string>

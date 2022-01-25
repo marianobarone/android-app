@@ -2,9 +2,6 @@ package com.example.list_app.entities;
 
 import org.json.JSONArray;
 
-import java.lang.reflect.Array;
-
-
 public class Recipe {
     private String name;
     private String category;

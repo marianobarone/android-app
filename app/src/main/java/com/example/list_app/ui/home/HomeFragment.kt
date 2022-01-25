@@ -29,21 +29,24 @@ import org.json.JSONObject
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.content.DialogInterface
 import android.content.Intent
+import android.util.Log
+import android.view.Gravity
 
 import android.widget.EditText
+import com.android.volley.VolleyLog
+import com.android.volley.toolbox.StringRequest
 import com.example.list_app.SignInActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import org.json.JSONArray
-
+import java.io.UnsupportedEncodingException
 
 class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
     private var _binding: FragmentHomeBinding? = null
@@ -64,6 +67,7 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
     lateinit var dropdownOptions: ArrayAdapter<String>
 
     lateinit var createGroupBtn: Button
+
 
     //Firebase
     private lateinit var googleSignInClient: GoogleSignInClient
@@ -94,7 +98,7 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
         createGroupBtn.setOnClickListener() {
             val input = TextInputEditText(v.context)
 
-            MaterialAlertDialogBuilder(v.context)
+            MaterialAlertDialogBuilder(v.context, R.style.CreateGroupAlertDialogTheme)
                 .setView(input)
                 .setTitle("Crear Nuevo Grupo")
                 .setMessage("Ingrese el nombre del nuevo grupo:") //
@@ -104,15 +108,71 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
                 .setPositiveButton("Crear") { dialog, which ->
                     //HACER LLAMADA A API PARA CAMBIAR DE GRUPO
                     val groupName = input.text.toString()
-                    System.out.println(groupName)
-                    System.out.println(groupName)
+                    println(groupName)
                     // Respond to positive button press
+
+                    agregarGrupo(groupName)
                 }
                 .show()
         }
 
         return v
     }
+
+
+    fun agregarGrupo(nombre: String) {
+
+        val prefs = v.context.getSharedPreferences("credentials", Context.MODE_PRIVATE)
+        val token = prefs.getString("token", null);
+
+        val objBody = JSONObject();
+        val grupo = JSONObject();
+        grupo.put("name", nombre);
+        objBody.put("group", grupo)
+
+        objBody.toString()
+
+        val addProductRequest: StringRequest = object : StringRequest(
+            Method.POST, "https://listapp2021.herokuapp.com/users/group",
+            Response.Listener { response ->
+                println("ESTA ES LA RESPUESTA A TDAS TUSS PREGUNTAS" + response)
+                Log.i("LOG_RESPONSE", response!!)
+                println("FUNCIONO GRUPO AGREGADO, GRANDE MAX")
+                getUserData()
+            },
+            Response.ErrorListener { error ->
+                Log.e("LOG_RESPONSE", error.toString())
+            }) {
+            override fun getBodyContentType(): String {
+                return "application/json; charset=utf-8"
+            }
+
+            override fun getBody(): ByteArray? {
+                return try {
+                    if (objBody == null) null else objBody.toString().toByteArray(charset("utf-8"))
+                } catch (uee: UnsupportedEncodingException) {
+                    VolleyLog.wtf(
+                        "Unsupported Encoding while trying to get the bytes of %s using %s",
+                        objBody,
+                        "utf-8"
+                    )
+                    null
+                }
+            }
+
+            override fun getHeaders(): Map<String, String> {
+                val token = prefs.getString("token", null);
+                val headers = HashMap<String, String>()
+                headers["Authorization"] = token!!
+                return headers
+            }
+        }
+
+        MySingleton.getInstance(v.context).addToRequestQueue(addProductRequest);
+    }
+
+
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -122,17 +182,6 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
         super.onStart()
         getRecipesData()
         getUserData()
-
-        //SI SOLO SE MUESTRAN CATEGORIAS Y GRUPOS, CUALQUIER CAMBIO QUE SE HAGA EN LA BASE NO IMPACTA PORQUE LOS show..() MUESTRAN DATA DEL SHARED PREFERENCES
-//        val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE)
-//
-//        //SI TIENE PREFS (SHARED PREFERENCES) == "usuario" SIGNIFICA QUE YA ESTÁ LOGUEADO EL USUARIO Y NO HACE FALTA VOLVER A CARGAR SHARED PREFERENCES
-//        if (!prefs.contains("usuario")) {
-//            getUserData()
-//        } else {
-//            showCategories()
-//            showGroups()
-//        }
     }
 
     fun getRecipesData() {
@@ -203,6 +252,7 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
                     grupoSeleccionado.setSubCategoriasStock(grupoAPI.getJSONArray("subcategoriesStock"))
                     grupoSeleccionado.setListaPendientes(grupoAPI.getJSONArray("shopList"))
                     grupoSeleccionado.setStock(grupoAPI.getJSONArray("stock"))
+                    grupoSeleccionado.setId(grupoAPI.getString("id"))
 
                     user.setUID(response.getString("uid"))
                     user.setMail(response.getString("mail"))
@@ -215,19 +265,22 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
 
                     val gson = Gson()
                     val userJson = gson.toJson(user)
-                    val groupsJson = gson.toJson(grupos)
-                    val categories = gson.toJson(grupoSeleccionado.categoriasStock)
-                    val stock = gson.toJson(grupoSeleccionado.stock)
+
 
                     prefs.putString("categorias", grupoSeleccionado.categoriasStock.toString())
                     prefs.putString("usuario", userJson);
+                    prefs.putString("userName", response.getString("username"));
+                    prefs.putString("userEmail", response.getString("mail"));
                     prefs.putString("nombreGrupoSeleccionado", grupoName);
                     prefs.putString("grupos", response.getJSONArray("idGroups").toString());
+                    prefs.putString("SelectedGroupId", grupoSeleccionado.id.toString())
                     prefs.putString("stock", grupoSeleccionado.stock.toString());
                     prefs.putString("listaPendientes", grupoSeleccionado.listaPendientes.toString()
                     );
 
                     prefs.apply();
+
+                    (activity as AppCompatActivity).supportActionBar?.setTitle("¡Hola " + response.getString("username") + "!")
 
                     showCategories()
 
@@ -238,8 +291,7 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
                 @Throws(AuthFailureError::class)
                 override fun getHeaders(): Map<String, String> {
                     val headers = HashMap<String, String>()
-                    val prefs =
-                        requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE)
+                    val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE)
                     val token = prefs.getString("token", null);
 
                     headers["Authorization"] = token!!
@@ -278,10 +330,9 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
     }
 
     fun showCategories() {
-
+        categories = ArrayList<Categoria>()
         val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE)
         val arrayCat = JSONArray(prefs.getString("categorias", ""))
-
         categories.add(Categoria("Stock Completo"))
 
         for (i in 0 until arrayCat.length()) {
@@ -332,8 +383,38 @@ class HomeFragment : Fragment(), AdapterView.OnItemClickListener {
     //Override de Groups Dropdown onClick
     //FUNCIONA PARA CADA ONCLICK DEL DROPDOWN DE GROUPS
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        //ACA ME TRAIGO LAS PREF
+        val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE)
         //ACÁ SE TIENE QUE CAMBIAR EL GRUPO SELECCIONADO DEL USUARIO, Y TRAER LA DATA DEL NUEVO GRUPO SELECCIONADO
         val item = parent?.getItemAtPosition(position).toString()
+
+        val grupos = JSONArray(prefs.getString("grupos", ""))
+        val grupo = grupos.get(position) as JSONObject
+       val grupoId = grupo.getString("id")
+
+        val userRequest: JsonObjectRequest =
+            object : JsonObjectRequest(Request.Method.PUT, API_URL + "/users/group/change/" + grupoId, null,
+                Response.Listener { response ->
+                    val res = "Response: %s".format(response.toString())
+                    println(res)
+                    getUserData()
+                }, Response.ErrorListener { error ->
+                    // handle error
+                    System.out.println("Response: %s".format(error.toString()))
+                }) {
+                @Throws(AuthFailureError::class)
+                override fun getHeaders(): Map<String, String> {
+                    val headers = HashMap<String, String>()
+                    val prefs = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE)
+                    val token = prefs.getString("token", null);
+
+                    headers["Authorization"] = token!!
+                    //headers["ANOTHER_CUSTOM_HEADER"] = "Google"
+                    return headers
+                }
+            }
+
+        MySingleton.getInstance(v.context).addToRequestQueue(userRequest);
 
         Toast.makeText(this.context, item, Toast.LENGTH_SHORT).show()
     }

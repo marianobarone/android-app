@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 
 public class GrupoSeleccionado {
+    private String id;
     private String nombreGrupo;
     private String duenio;
     private JSONArray categoriasStock;
@@ -13,6 +14,15 @@ public class GrupoSeleccionado {
     private JSONArray stock;
 
     public GrupoSeleccionado(String nombreGrupo, String duenio, JSONArray categoriasStock, JSONArray subCategoriasStock, JSONArray listaPendientes, JSONArray stock) {
+        this.nombreGrupo = nombreGrupo;
+        this.duenio = duenio;
+        this.categoriasStock = categoriasStock;
+        this.subCategoriasStock = subCategoriasStock;
+        this.listaPendientes = listaPendientes;
+        this.stock = stock;
+    }
+    public GrupoSeleccionado(String nombreGrupo, String duenio, JSONArray categoriasStock, JSONArray subCategoriasStock, JSONArray listaPendientes, JSONArray stock, String id) {
+        this.id = id;
         this.nombreGrupo = nombreGrupo;
         this.duenio = duenio;
         this.categoriasStock = categoriasStock;
@@ -82,5 +92,13 @@ public class GrupoSeleccionado {
 
     public void setStock(JSONArray stock) {
         this.stock = stock;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
